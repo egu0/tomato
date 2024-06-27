@@ -169,7 +169,8 @@ pub mod class_loader {
                     buffer
                 } else {
                     let mut user_class_path = path.as_path().to_str().unwrap().to_string();
-                    user_class_path.push_str("/test/out/");
+                    //user_class_path.push_str("/test/out/");
+                    user_class_path.push_str("/test/target/classes/");
                     user_class_path.push_str(name);
                     user_class_path.push_str(".class");
                     let class_path = Path::new(&user_class_path);
