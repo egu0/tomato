@@ -1,54 +1,57 @@
+pub mod array;
 pub mod class;
 pub mod class_loader;
-pub mod u8c;
-pub mod stack_frame;
-pub mod op_code;
+pub mod debug;
+pub mod gc;
+pub mod native;
+pub mod native_array;
+pub mod native_class;
+pub mod native_io;
+pub mod native_math;
+pub mod native_object;
+pub mod native_system;
 pub mod object;
-pub mod runtime_data_area;
-pub mod value;
+pub mod op_code;
+pub mod opcode_array;
+pub mod opcode_checkcast;
+pub mod opcode_compare;
+pub mod opcode_const;
+pub mod opcode_convert;
+pub mod opcode_dup;
+pub mod opcode_exception;
+pub mod opcode_field;
+pub mod opcode_goto;
+pub mod opcode_instanceof;
+pub mod opcode_invoke;
+pub mod opcode_ldc;
+pub mod opcode_load;
+pub mod opcode_math;
+pub mod opcode_new;
+pub mod opcode_nop;
+pub mod opcode_pop;
+pub mod opcode_push;
+pub mod opcode_return;
+pub mod opcode_static;
+pub mod opcode_store;
+pub mod opcode_swap;
 pub mod param;
 pub mod reference;
-pub mod array;
-pub mod opcode_store;
-pub mod opcode_array;
-pub mod opcode_const;
-pub mod opcode_push;
-pub mod opcode_nop;
-pub mod opcode_load;
-pub mod opcode_ldc;
-pub mod opcode_math;
-pub mod opcode_return;
-pub mod opcode_dup;
-pub mod opcode_pop;
-pub mod opcode_swap;
-pub mod opcode_convert;
-pub mod opcode_compare;
-pub mod opcode_goto;
-pub mod opcode_static;
-pub mod opcode_field;
-pub mod opcode_new;
-pub mod opcode_invoke;
-pub mod native;
-pub mod native_io;
-pub mod debug;
-pub mod native_system;
-pub mod native_class;
-pub mod native_math;
-pub mod opcode_instanceof;
-pub mod gc;
-pub mod native_object;
-pub mod opcode_exception;
-pub mod opcode_checkcast;
-pub mod native_array;
+pub mod runtime_data_area;
+pub mod stack_frame;
+pub mod u8c;
+pub mod value;
 use crate::class::ConstantPoolInfo;
-use crate::stack_frame::*;
 use crate::runtime_data_area::get_or_load_class;
-extern crate log;
+use crate::stack_frame::*;
 extern crate env_logger;
+extern crate log;
 use crate::op_code::op_code::*;
-use std::env;
 use log::info;
+use std::env;
 
+/**
+ * cd test && mvn clean compile && cd .. && cargo run
+ */
 
 fn main() {
     env::set_var("RUST_LOG", "DEBUG");
@@ -63,15 +66,15 @@ fn main() {
  * 虚拟机启动方法
  */
 pub fn run(main_class_path: String) {
-    let class = get_or_load_class(&main_class_path);   
+    let class = get_or_load_class(&main_class_path);
     //创建VM
     //找到main方法
-    for i in 0..* &class.method_info.len() {
+    for i in 0..*&class.method_info.len() {
         let method_info = &class.method_info[i];
         //let methond_index = (method_info.name_index as usize) - 1;
         let u8_vec = class.constant_pool.get(&method_info.name_index).unwrap();
         match u8_vec {
-            ConstantPoolInfo::Utf8(name) =>{
+            ConstantPoolInfo::Utf8(name) => {
                 //println!("method:{}", &name);
                 info!("{}", name);
                 //创建虚拟机栈，并创建第一个栈帧
@@ -81,7 +84,7 @@ pub fn run(main_class_path: String) {
                     execute(vm_stack_id);
                 }
             }
-            _=> panic!("wrong class data")
+            _ => panic!("wrong class data"),
         }
     }
 }

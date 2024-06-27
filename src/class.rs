@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
 use crate::{param::param::DataType, value::value::StackFrameValue};
+
+// classfile: https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.1
 #[derive(Debug, Clone)]
 pub struct Class {
     pub magic: u32,
@@ -14,14 +16,14 @@ pub struct Class {
     pub interface_count: u16,
     pub interfaces: Vec<u16>,
     pub fields_count: u16,
-    pub field_info: HashMap<String,FieldInfo>,
+    pub field_info: HashMap<String, FieldInfo>,
     pub methods_count: u16,
     pub method_info: Vec<MethodInfo>,
     pub attributes_count: u16,
     pub attribute_info: Vec<AttributeInfo>,
     pub id: usize,
     pub class_name: String,
-    pub super_class_name:String
+    pub super_class_name: String,
 }
 
 impl Class {
@@ -45,7 +47,7 @@ impl Class {
             attribute_info: Vec::new(),
             id: 0,
             class_name: String::new(),
-            super_class_name:String::new(),
+            super_class_name: String::new(),
         }
     }
 }
